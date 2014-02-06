@@ -1,0 +1,83 @@
+\section{9 January 2014}
+\emph{Lemma 2:} G{\textendash}S returns a stable matching
+\begin{description}
+\item[a] Every man is matched to a woman
+\item[b] There does not exist an unstable pair, i.e. pairs ($m$, $2$) and ($m'$, $w'$) such that $m$ prefers $w'$ over $w$ and $w'$ prefers $m$ over $m'$.
+\end{description}
+
+\textbf{(a)}: By contradiction\\
+Suppose there exists a man $m$ who is not matched to any woman. There must exist an unmatched woman.
+\begin{itemize}
+\item $m$ must have gone through his list
+\item at some point proposed to $w$
+\item certainly from that point on, $w$ is matched
+\end{itemize}
+Contradicts the fact that $w$ is unmatched at the end. Therefore \textbf{(a)} holds.\\
+
+\textbf{(b)}: By contradiction\\
+Suppose two pairs exist ($m$, $w$) and ($m'$, $w'$). Their preferences are:\\
+$m: w'...w$\\
+$w': m...m'$\\
+We know that at step 1, $m$ proposed to $w'$ at some instant $t$. After the proposal, $w'$ is matched to some man whom she likes at least as much as $m$. At termination, $w'$ is engaged to a man she likes at least as much as $m$. Contradicting matching ($m'$, $w'$).\\
+
+Total number of steps $\leq 10n^2$\\
+List for woman $w$, where the $i$th value is her $i$th preferred man:\\
+\begin{tabular}{ c c c c c c c c c c }
+1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ \hline
+\multicolumn{1}{|c|}{5} & \multicolumn{1}{|c|}{3} & \multicolumn{1}{|c|}{1} & \multicolumn{1}{|c|}{9} & \multicolumn{1}{|c|}{10} & \multicolumn{1}{|c|}{8} & \multicolumn{1}{|c|}{6} & \multicolumn{1}{|c|}{7} & \multicolumn{1}{|c|}{2} & \multicolumn{1}{|c|}{4} \\ \hline
+\end{tabular}\\
+
+Invert, so the $i$th value is the rank of man $i$:\\
+\begin{tabular}{ c c c c c c c c c c }
+1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ \hline
+\multicolumn{1}{|c|}{3} & \multicolumn{1}{|c|}{9} & \multicolumn{1}{|c|}{2} & \multicolumn{1}{|c|}{10} & \multicolumn{1}{|c|}{1} & \multicolumn{1}{|c|}{7} & \multicolumn{1}{|c|}{8} & \multicolumn{1}{|c|}{6} & \multicolumn{1}{|c|}{4} & \multicolumn{1}{|c|}{5} \\ \hline
+\end{tabular}\\
+
+Suppose woman is engaged to man \#5 and man \#3 proposes. She'll look up 5 and 3 in the inverted list. If we didn't reverse the list, the total number of steps would be $n^3$.
+
+\subsection{Array of numbers}
+A[1, ..., $n$]\\
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+3 & 4 & 13 & 28 & 30 \\ \hline
+0 & 1 & 10 & 25 & 27 \\ \hline
+0 & 0 & 9 & 24 & 26 \\ \hline
+0 & 0 & 0 & 15 & 17 \\ \hline
+0 & 0 & 0 & 0 & 2 \\ \hline
+\end{tabular}\\
+
+For rows $i$ and columns $j$:\\
+$B[i/j] = \left\{
+\begin{array}{lr}
+\mbox{sum of } A[i...j] & : i \leq j\\
+0 & : i > j \end{array}
+\right.$
+
+Where the sum of $A[i ... j]$ is $A[i] + A[i+1] + ... + A[j]$
+\newpage
+\begin{algorithmic}[1]
+\State{Zero the array by setting $B[i/j]$ to 0 for all $i,j$}
+\For{$i$ from 1 to $n$}
+\For{$j$ from $i$ to $n$}
+\State{set $B[i/j]$ to the sum of $A[i], A[i+1], ..., A[j]$}
+\State{sum $\gets 0$}
+\For{$k \gets i$ to $j$}
+\State{sum $\gets$ sum $ + A[k]$}
+\EndFor
+\State{$B[i,j] \gets $ sum}
+\EndFor
+\EndFor
+\end{algorithmic}
+
+\begin{description}
+\item[1] $n^2$
+\item[2] $n$
+\item[3] For iteration $i$: $n-i+1$ times $= \frac{n(n+1)}{2}$
+\item[5] For fixed $i,j$: $1 \gets \frac{n(n+1)}{2}$
+\item[6] For fixed $i,j$: $j-i+1$
+\item[7] For fixed $i,j$: $j-i+1$
+\item[9] For fixed $i,j$: 1
+\end{description}
+
+Running time: $n^2 + n + \frac{n(n+1)}{2} + \frac{n(n+1)}{2} + \frac{n(n+1)}{2} + n^3 + n^3 \leq 2n^3 + \frac{5n^2}{2} + \frac{5n}{2}$
