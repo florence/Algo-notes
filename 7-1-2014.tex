@@ -1,0 +1,101 @@
+\section{7 January 2014}
+\subsection{Stable Marriage Problem}
+Gale-Shapley, 1962\\
+
+Residents list hospital preferences, hospitals list resident preferences.\\
+
+Try to find a \emph{stable} arrangement. That is, there does not exist a resident $R$ or hospital $H$ such that $R$ and $H$ are not currently assigned to each other, but would prefer to be assigned to each other over their current assignments.
+
+\begin{figure}[h]
+\begin{minipage}[h]{.5\linewidth}
+\centering
+\begin{tabular}{c|c c c}
+  & 1 & 2 & 3 \\ \hline
+A & Y & X & Z \\
+B & X & Y & Z \\
+C & Z & X & Y
+\end{tabular}
+\subcaption{Amy, Bertha, Clare}
+\end{minipage}
+\begin{minipage}[h]{.5\linewidth}
+\centering
+\begin{tabular}{c|c c c}
+  & 1 & 2 & 3 \\ \hline
+X & A & B & C \\
+Y & B & C & A \\
+Z & B & A & C
+\end{tabular}
+\subcaption{Xavier, Yancey, Zeus}
+\end{minipage}
+\end{figure}
+
+Do stable matchings exist? If so, how do we find them?\\
+
+(X, A) (Y, B): stable\\
+(X, A) (Z, C): stable\\
+(Y, B) (Z, C): stable\\
+
+(X, C), (Y, B), and (Z, C) is \emph{unstable}: B prefers X over Y, X prefers B over C.
+
+\subsubsection*{Possible approaches}
+\begin{description}
+\item[Approach 1] Assign a value to each pair and pick match with largest value
+\item[Approach 2] If a man and woman prefer each other, match them and repeat
+\item[Approach 3] If exists unique top choice, match them. If two or more have same top choice, go through the others and identify stable pairs.
+\end{description}
+
+\subsubsection*{Gale{\textendash}Shapley Method}
+\begin{algorithmic}
+\While{there exists unmatched man $m$ who has not proposed to all women}
+\State{$m$ proposes to next woman $w$ on his list}
+\If{$w$ is unmatched or $w$ is engaged to $m'$ but prefers $m$ to $m'$}
+\State{$w$ gets matched to $m$ (dumping $m'$ if necessary)}
+\Else{$w$ rejects $m$}
+\EndIf
+\EndWhile
+\end{algorithmic}
+
+\subsubsection*{Example}
+\begin{multicols}{2}
+X proposes to A\\
+Z proposes to B\\
+Y proposes to B\\
+Z proposes to A, A rejects Z\\
+Z proposes to C
+\columnbreak
+
+(X, A)\\
+(X, A), (Z, B)\\
+(X, A), \sout{(Z, B)} (Y, B)\\
+(X, A), (Y, B)\\
+(X, A), (Y, B), (Z, C)
+\end{multicols}
+
+\begin{description}
+\item[Lemma 1]: G{\textendash}S always terminates.
+\item[Lemma 2]: At termination, the matching is stable.
+\end{description}
+
+\subsubsection*{Stable roommates}
+\begin{tabular}{c|c c c}
+  & 1 & 2 & 3\\ \hline
+A & B & C & D\\
+B & C & A & D\\
+C & A & B & D\\
+D & A & B & C
+\end{tabular}
+
+Never stable, because no one wants to live with D.\\
+
+\emph{Observation 1:} Once a woman is proposed to, she is always matched.\\
+\emph{Proof:} First time a woman is proposed to (line 2) she gets engaged (line 4). Thereafter she breaks off the engagement only to get engaged to someone else.\\
+
+\emph{Observation 2:} At termination, every man is either matched or has proposed to every woman.\\
+\emph{Proof of Lemma 1:}
+\begin{itemize}
+\item In each iteration of the while loop, some man $m$ proposes to some woman $w$.
+\item No man proposes to the same woman twice.
+\item No more than $n^2$ proposals.
+\item No more than $n^2$ iterations.
+\item G{\textendash}S terminates in $\leq n^2$ iterations.
+\end{itemize}
